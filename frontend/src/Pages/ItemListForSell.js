@@ -6,6 +6,8 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 function ItemListForSell({ selectedItem, setSelectedItem }) {
     const [items, setitems] = useState([]);
     const [query, setQuery] = useState("");
+    const [availableQuantities, setAvailableQuantities] = useState({}); // State to track available quantities
+
     // console.log(query);
     async function fetchItems() {
         fetch('http://localhost:4000/add/fetch_items')
@@ -17,6 +19,11 @@ function ItemListForSell({ selectedItem, setSelectedItem }) {
             })
             .then(data => {
                 setitems(data)
+                const quantities = {};
+                data.forEach(item => {
+                    quantities[item.itemname] = item.quantity; // Initialize available quantities
+                });
+                setAvailableQuantities(quantities);
                 // console.log('Fetched Data:', data);
                 // console.log(data[0].firstname)
             })
@@ -34,7 +41,7 @@ function ItemListForSell({ selectedItem, setSelectedItem }) {
                 if (selected.itemname === item.itemname) {
                     const updatedQuantity = selected.quantity + 1;
                     const updatedTotalPrice = (selected.quantity + 1) * item.sellingprice;
-                    return { ...selected, quantity: updatedQuantity, totalPrice: updatedTotalPrice, unit: item.units };
+                    return { ...selected, quantity: updatedQuantity, totalPrice: updatedTotalPrice, unit: item.units, costprice: item.costprice };
                 }
                 return selected;
             });
@@ -42,12 +49,32 @@ function ItemListForSell({ selectedItem, setSelectedItem }) {
         } else {
             // If the item doesn't exist, add it with quantity 1 and calculate total price
             // const updatedTotalPrice = item.sellingprice;
-            setSelectedItem([...selectedItem, { ...item, quantity: 1, totalPrice: item.sellingprice, unit: item.units }]);
-            // setTotalPrice(item.sellingprice);
+            setSelectedItem([...selectedItem, { ...item, quantity: 1, totalPrice: item.sellingprice, unit: item.units, costprice: item.costprice }]);
         }
 
-        // Calculate the total price
-        // const newTotalPrice = selectedItem.reduce((acc, selectedItem) => acc + selectedItem.totalprice, 0);
+        // const updatedQuantities = { ...availableQuantities };
+        // updatedQuantities[item.itemname] -= 1;
+        // setAvailableQuantities(updatedQuantities);
+
+        // Fetch the updated quantities for the specific item
+        fetch('http://localhost:4000/add/fetch_items')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const updatedQuantities = { ...availableQuantities };
+                const selectedItemInData = data.find((dataItem) => dataItem.itemname === item.itemname);
+                if (selectedItemInData) {
+                    updatedQuantities[item.itemname] = selectedItemInData.quantity;
+                }
+                setAvailableQuantities(updatedQuantities);
+            })
+            .catch(error => {
+                console.error('Error fetching Items: ', error);
+            });
     };
 
     useEffect(() => {

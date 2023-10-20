@@ -48,9 +48,7 @@ const Login = () => {
       // });
 
       navigate("/")
-      
-
-
+    
     } else {
       swal({
         title: data["message"],

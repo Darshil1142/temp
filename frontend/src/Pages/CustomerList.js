@@ -17,7 +17,7 @@ import { useNavigate } from 'react-router-dom';
 import {FcViewDetails} from 'react-icons/fc';
 import {AiFillDelete} from 'react-icons/ai';
 
-function CustomerList({ setAddCustomer, setContact, setitemList, setAddItem, setcustomerList, setcategoryList, setSell, setFormData }){
+function CustomerList({ setAddCustomer, setContact, setitemList, setAddItem, setcustomerList, setcategoryList, setSell, setFormData ,setPayment}){
     const[customers,setCustomers] = useState([]);
     const [open1, setOpen1] = useState(false);
     const [open2, setOpen2] = useState(false);
@@ -143,6 +143,7 @@ function CustomerList({ setAddCustomer, setContact, setitemList, setAddItem, set
         setcategoryList(false)
         setAddCustomer(false)
         setcustomerList(false)
+        setPayment(false)
         setSell(true)
     }
 
@@ -191,30 +192,6 @@ function CustomerList({ setAddCustomer, setContact, setitemList, setAddItem, set
             <table className="w-1/2 border-collapse">
                 <thead className="text-center">
                     <tr>
-                        {/* <th className="border border-gray-300 px-4 py-2 text-center text-xs font-medium text-black-500 uppercase">
-                            <div className="">CID</div>
-                        </th>
-                        <th className="border border-gray-300 px-4 w-auto py-2 text-center text-xs font-medium text-black-500 uppercase">
-                            <div className="">First Name</div>
-                        </th>
-                        <th className="border border-gray-300 px-4 py-2 text-center text-xs font-medium text-black-500 uppercase">
-                            <div className="">Last Name</div>
-                        </th>
-                        <th className="border border-gray-300 px-4 py-2 text-center text-xs font-medium text-black-500 uppercase">
-                            <div className="">Phone No</div>
-                        </th>
-                        <th className="border border-gray-300 px-4 py-2 text-center text-xs font-medium text-black-500 uppercase">
-                            <div className="">Details</div>
-                        </th>
-                        <th className="border border-gray-300 px-4 py-2 text-center text-xs font-medium text-black-500 uppercase">
-                            <div className="">Sale</div>
-                        </th>
-                        <th className="border border-gray-300 px-4 py-2 text-center text-xs font-medium text-black-500 uppercase">
-                            <div className="">Payment History</div>
-                        </th>
-                        <th className="border border-gray-300 px-4 py-2 text-center text-xs font-medium text-black-500 uppercase">
-                            <div className="">Status</div>
-                        </th> */}
                         <th className=" rounded-tl-xl border-gray-700 bg-gray-700 text-white  py-2 text-center text-xs font-medium uppercase">
                                 <div className="">CID </div>
                             </th>
@@ -245,20 +222,20 @@ function CustomerList({ setAddCustomer, setContact, setitemList, setAddItem, set
                     </tr>
                 </thead>
                 <tbody>
-                    {customers.filter((customer)=>customer.firstname.toLowerCase().includes(query) || customer.lastname.toLowerCase().includes(query)||customer.phoneno.includes(query)).map((customer,index)=> (
+                    {customers.filter((customer)=>customer.firstname.toLowerCase().includes(query.toLowerCase()) || customer.lastname.toLowerCase().includes(query)||customer.phoneno.includes(query)).map((customer,index)=> (
                         <tr className='text-center hover:border-2 hover:border-black hover:rounded-md'style={{backgroundColor:index%2===0 ? '#f0f0f0' : '#f8f8f8' }} key={customer._id} >
-                            <td className='border-2 border-gray-300 px-4 py-2 m-2 rounded bg-[1F3F49]'><p className='bg-gray-700 text-white w-8 h-8 rounded-full mt-1'>{index + 1}</p></td>
-                            <td className='border-2 border-gray-300 px-4 py-2'>{customer.firstname}</td>
-                            <td className='border-2 border-gray-300 px-4 py-2'>{customer.lastname}</td>
-                            <td className='border-2 border-gray-300 px-4 py-2'>{customer.phoneno}</td>
+                            <td className='border border-gray-300 px-4 py-2 '><p className='bg-gray-700 text-white w-8 h-8 rounded-full mt-1'>{index + 1}</p></td>
+                            <td className='border border-gray-300 px-4 py-2'>{customer.firstname}</td>
+                            <td className='border border-gray-300 px-4 py-2'>{customer.lastname}</td>
+                            <td className='border border-gray-300 px-4 py-2'>{customer.phoneno}</td>
                             <td className='border border-gray-200 px-4 py-2 customer_link text-blue-800'>
                                     <Button variant="outlined" onClick={() => handleClickOpen1(customer)}><FcViewDetails/> Details</Button>
                                 </td>
                                 <td className='border border-gray-200 px-4 py-2 customer_link text-blue-800'>
                                     <Button variant="outlined" onClick={() => { handleSetSell(index, customer) }}><FcViewDetails /> Sale</Button>
                                 </td>
-                            <td className='border-2 border-gray-300 px-4 py-2 customer_link text-blue-500 underline'><a href="#">Payments</a></td>
-                            <td className='border-2 border-gray-300 px-4 py-2 customer_link text-blue-500 underline'><a href="#">Status</a></td>
+                            <td className='border border-gray-300 px-4 py-2 customer_link text-blue-500 underline'><a href="#">Payments</a></td>
+                            <td className='border border-gray-300 px-4 py-2 customer_link text-blue-500 underline'><a href="#">Status</a></td>
                             <td className='border border-gray-200 px-4 py-2 customer_link'>
                                     <Button variant="outlined" onClick={()=>handleDeltecustomer(customer._id)} style={{color:"red",border:"1px solid red"}}><AiFillDelete/> Delete</Button>
                                 </td>

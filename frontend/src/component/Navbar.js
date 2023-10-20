@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { AppState } from '../App';
 import { useData } from '../useContext/DataContext';
 
-const Navbar = ({ links, setAddCustomer, setContact, setitemList, setAddItem, setcategoryList, setcustomerList,setSell }) => {
+const Navbar = ({ links, setAddCustomer, setContact, setitemList, setAddItem, setcategoryList, setcustomerList,setSell,setPayment }) => {
 
   const [open, setOpen] = useState(false);
 
@@ -57,7 +57,7 @@ const Navbar = ({ links, setAddCustomer, setContact, setitemList, setAddItem, se
             <div className={`md:block ${showMobileMenu ? 'block mt-2 md:mt-0' : 'hidden md:block md:mt-0'}`}>
               <Link to="/signup">
                 <button className="bg-[#1F3F49] text-white px-5 py-2 rounded-full hover:bg-white hover:text-green-800 hover:border-2 duration-200 mx-2 drop-shadow-xl">
-                  Sign In
+                  Sign Up
                 </button>
               </Link>
               <Link to="/login">
@@ -76,6 +76,7 @@ const Navbar = ({ links, setAddCustomer, setContact, setitemList, setAddItem, se
                   setcategoryList(false)
                   setcustomerList(false)
                   setSell(false)
+                  setPayment(false)
                   setAddCustomer(true)
                 }} className="bg-[#1F3F49] drop-shadow-xl text-white px-5 py-2 rounded-full hover:bg-white hover:text-green-800 hover:border-2 duration-200 mx-2 ">
                   Customer +
@@ -89,6 +90,7 @@ const Navbar = ({ links, setAddCustomer, setContact, setitemList, setAddItem, se
                   setcategoryList(false)
                   setcustomerList(false)
                   setSell(false)
+                  setPayment(false)
                   setAddItem(true)
                 }} className="bg-[#1F3F49] drop-shadow-xl w-[120px] text-white px-5 py-2 rounded-full hover:bg-white hover:text-green-800 hover:border-2 duration-200 mx-2 ">
                   Item +

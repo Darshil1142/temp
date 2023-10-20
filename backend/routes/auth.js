@@ -63,9 +63,6 @@ router.post("/createuser", [
     }
 })
 
-
-
-
 //ROUTE 2 : Authenticate a user  :POST "/auth/login". it Does Not require login
 router.post("/login", [
 
@@ -185,7 +182,7 @@ router.get("/forgotpassword/:id/:token",async(req,res)=>{
 
      //CHANGE PASSWORD
      
-     router.post('/:id/:token',async(req,res)=>{
+ router.post('/:id/:token',async(req,res)=>{
          const {id,token} = req.params ;
          const {password} = req.body;
          try {
@@ -204,6 +201,6 @@ router.get("/forgotpassword/:id/:token",async(req,res)=>{
          } catch (error) {
              return res.status(401).json({error});
          }
-     })
+})
 
 module.exports = router

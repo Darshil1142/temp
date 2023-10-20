@@ -92,11 +92,7 @@ function CategoryList() {
     fetchCategory();
   }
 
-  // const changeColor = (selectedRow)=>{
-  //   if (selectedRow !== undefined) {
-  //     setChangeColor({ selectedRow  });
-  //   }
-  // }
+
   return ( 
     <div className="container mx-auto">
       <div className="mt-4  flex justify-center items-center ">
@@ -124,6 +120,9 @@ function CategoryList() {
               </th>
               <th className="border border-gray-300 px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase">
                 <div className="">Name</div>
+              </th>
+              <th className="border border-gray-300 px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase">
+                <div className="">Delete</div>
               </th>
             </tr>
           </thead>
