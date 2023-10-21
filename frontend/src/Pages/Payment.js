@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
 function Payment() {
@@ -11,6 +11,9 @@ function Payment() {
   const [paymentMethod, setPaymentMethod] = useState('Cash');
   const [amountpaid, setAmountpaid] = useState();
   const [remaining_amount, setRemaining_amount] = useState(0)
+
+  const [previousRemaining, setPreviousRemaining] = useState(0);
+
 
   const [chequeDetails, setChequeDetails] = useState({
     chequeNo: '',
@@ -191,7 +194,68 @@ function Payment() {
           // Handle errors as needed (e.g., show an error message)
         });
     }
+
   };
+
+  const fetchingRemainingAmount = async () => {
+    const customerPhone = searchParams.get('customerPhone');
+    console.log("frontend useEffect");
+    console.log(customerPhone);
+
+    try {
+      // Fetch and set the previous remaining amount when the component loads
+      const url = "http://localhost:4000/payment/fetch_remaining_amount";
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ customerPhone }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Error fetching previous remaining amount');
+      }
+
+      const data = await response.json();
+      console.log('fetch_remaining_amount:', data);
+      setPreviousRemaining(data.previousRemainingAmount);
+    } catch (error) {
+      console.error('Error fetching previous remaining amount:', error);
+    }
+  };
+
+
+  // useEffect(() => {
+  //   const rem = fetchingRemainingAmount();
+  //   console.log("rem")
+  //   console.log(rem)
+  //   // Calculate the remaining amount when amountpaid or totalCost changes
+  //   const paidAmount = parseFloat(amountpaid);
+  //   const cost = parseFloat(totalCost);
+
+  //   if (!isNaN(paidAmount) && !isNaN(cost)) {
+  //     const remaining = cost - paidAmount + previousRemaining;
+  //     setRemaining_amount(remaining.toFixed(2)); // Round to 2 decimal places
+  //   }
+  // }, [previousRemaining]);
+
+  useEffect(() => {
+    // Calculate the new remaining amount based on the accumulated previousRemaining
+    fetchingRemainingAmount();
+    // console.log("rem")
+    // console.log(remaining_amount)
+    // const paidAmount = parseFloat(amountpaid);
+    // const cost = parseFloat(totalCost);
+
+    // if (!isNaN(paidAmount) && !isNaN(cost)) {
+    //   const newRemaining = cost - paidAmount + previousRemaining;
+    //   setRemaining_amount(newRemaining); // Round to 2 decimal places
+    // }
+  }, []);
+
+
+
 
   return (
     <div className="mx-auto max-w-md p-6 bg-white rounded-lg shadow-lg">
@@ -214,9 +278,9 @@ function Payment() {
       <div className="mb-4">
         <label className="block mb-2">Remaining Amount:</label>
         <input
-          type="number"
-          value={totalCost}
-          disabled
+          type="text"
+          value={previousRemaining}
+          readOnly
           className="w-full p-2 border rounded bg-gray-200"
         />
       </div>

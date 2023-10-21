@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Payment = require('../models/payment.js');
 const ChequeDetails = require('../models/ChequeDetails');
-const CardDetails=require("../models/CardDetails .js")
+const CardDetails = require("../models/CardDetails .js")
 const UpiDetails = require("../models/UpiDetails.js");
 const CashDetails = require("../models/cashdetails.js")
 
@@ -59,7 +59,7 @@ router.post('/confirm_card_payment', async (req, res) => {
             cardNumber: cardDetails.cardNumber,
             cardBankName: cardDetails.cardBankName,
             cardHolderName: cardDetails.cardHolderName,
-            
+
         });
 
         // Save the ChequeDetails document
@@ -86,7 +86,7 @@ router.post('/confirm_card_payment', async (req, res) => {
     }
 });
 
-router.post('/confirm_upi_payment',async(req,res) => {
+router.post('/confirm_upi_payment', async (req, res) => {
     try {
         console.log("backend sideeeee")
         const { totalCost, customerName, customerPhone, amountpaid, remaining_amount, paymentMethod, upiDetails } = req.body;
@@ -121,7 +121,7 @@ router.post('/confirm_upi_payment',async(req,res) => {
     }
 });
 
-router.post('/confirm_cash_payment',async(req,res) => {
+router.post('/confirm_cash_payment', async (req, res) => {
     try {
         console.log("backend sideeeee")
         const { totalCost, customerName, customerPhone, amountpaid, remaining_amount, paymentMethod, cashDetails } = req.body;
@@ -156,4 +156,31 @@ router.post('/confirm_cash_payment',async(req,res) => {
     }
 });
 
+router.post('/fetch_remaining_amount', async (req, res) => {
+    console.log("backend")
+    console.log(req.body)
+    try {
+      const { customerPhone } = req.body;
+  
+      // Implement the logic to fetch the remaining amount from the database
+      // Use customerPhone to find the specific customer's remaining amount
+  
+      // Example:
+      const result = await Payment.findOne({  customerphoneno: customerPhone });
+  
+      if (result) {
+        // Send the previousRemainingAmount to the client
+        console.log("backend result")
+        res.json({ previousRemainingAmount: result.remaining_amount });
+      } else {
+        console.log("backend not found")
+        res.status(404).json({ error: 'Previous remaining amount not found' });
+      }
+    } catch (error) {
+        console.log("backend catch")
+      console.error('Error fetching previous remaining amount:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  });
+  
 module.exports = router;
