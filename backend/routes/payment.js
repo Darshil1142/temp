@@ -3,6 +3,9 @@ const router = express.Router();
 const Payment = require('../models/payment.js');
 const ChequeDetails = require('../models/ChequeDetails');
 const CardDetails=require("../models/CardDetails .js")
+const UpiDetails = require("../models/UpiDetails.js");
+const CashDetails = require("../models/cashdetails.js")
+
 
 // Create a new payment
 router.post('/confirm_cheque_payment', async (req, res) => {
@@ -44,7 +47,6 @@ router.post('/confirm_cheque_payment', async (req, res) => {
     }
 });
 
-
 router.post('/confirm_card_payment', async (req, res) => {
     try {
         console.log("backend sideeeee")
@@ -84,83 +86,74 @@ router.post('/confirm_card_payment', async (req, res) => {
     }
 });
 
+router.post('/confirm_upi_payment',async(req,res) => {
+    try {
+        console.log("backend sideeeee")
+        const { totalCost, customerName, customerPhone, amountpaid, remaining_amount, paymentMethod, upiDetails } = req.body;
+        console.log("backend side")
+        console.log(req.body)
+        // Create a new ChequeDetails document
+        const newUpiDetails = new UpiDetails({
+            upiID: upiDetails.upiID
+        });
 
-// router.post('/confirm_upi_payment', async (req, res) => {
-//     try {
-//         console.log("backend sideeeee")
-//         const { totalCost, customerName, customerPhone, amountpaid, remaining_amount, paymentMethod, chequeDetails } = req.body;
-//         console.log("backend side")
-//         console.log(req.body)
-//         // Create a new ChequeDetails document
-//         const newChequeDetails = new ChequeDetails({
+        // Save the ChequeDetails document
+        const savedUpiDetails = await newUpiDetails.save();
 
-//             chequeNo: chequeDetails.chequeNo,
-//             chequeAmount: chequeDetails.chequeAmount,
-//             accountHolderName: chequeDetails.accountHolderName,
-//             bankName: chequeDetails.bankName,
-//         });
+        // Create a new Payment document with a reference to the saved ChequeDetails
+        const newPayment = new Payment({
+            totalCost: totalCost,
+            customername: customerName,
+            customerphoneno: customerPhone,
+            amountpaid: amountpaid,
+            remaining_amount: remaining_amount,
+            payment_method: paymentMethod,
+            upiDetails: savedUpiDetails._id,
+        });
 
-//         // Save the ChequeDetails document
-//         const savedChequeDetails = await newChequeDetails.save();
+        // Save the Payment document
+        const savedPayment = await newPayment.save();
 
-//         // Create a new Payment document with a reference to the saved ChequeDetails
-//         const newPayment = new Payment({
-//             totalCost: totalCost,
-//             customername: customerName,
-//             customerphoneno: customerPhone,
-//             amountpaid: amountpaid,
-//             remaining_amount: remaining_amount,
-//             payment_method: paymentMethod,
-//             chequeDetails: savedChequeDetails._id,
-//         });
+        res.status(200).json({ message: 'Payment details saved successfully', payment: savedPayment });
+    } catch (error) {
+        console.error('Error saving payment details:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
 
-//         // Save the Payment document
-//         const savedPayment = await newPayment.save();
+router.post('/confirm_cash_payment',async(req,res) => {
+    try {
+        console.log("backend sideeeee")
+        const { totalCost, customerName, customerPhone, amountpaid, remaining_amount, paymentMethod, cashDetails } = req.body;
+        console.log("backend side")
+        console.log(req.body)
+        // Create a new ChequeDetails document
+        const newCashDetails = new CashDetails({
+            cash_amount: cashDetails.cash_amount
+        });
 
-//         res.status(200).json({ message: 'Payment details saved successfully', payment: savedPayment });
-//     } catch (error) {
-//         console.error('Error saving payment details:', error);
-//         res.status(500).json({ message: 'Internal server error' });
-//     }
-// });
+        // Save the ChequeDetails document
+        const savedCashDetails = await newCashDetails.save();
 
-// router.post('/confirm_case_payment', async (req, res) => {
-//     try {
-//         console.log("backend sideeeee")
-//         const { totalCost, customerName, customerPhone, amountpaid, remaining_amount, paymentMethod, chequeDetails } = req.body;
-//         console.log("backend side")
-//         console.log(req.body)
-//         // Create a new ChequeDetails document
-//         const newChequeDetails = new ChequeDetails({
+        // Create a new Payment document with a reference to the saved ChequeDetails
+        const newPayment = new Payment({
+            totalCost: totalCost,
+            customername: customerName,
+            customerphoneno: customerPhone,
+            amountpaid: amountpaid,
+            remaining_amount: remaining_amount,
+            payment_method: paymentMethod,
+            cashDetails: savedCashDetails._id,
+        });
 
-//             chequeNo: chequeDetails.chequeNo,
-//             chequeAmount: chequeDetails.chequeAmount,
-//             accountHolderName: chequeDetails.accountHolderName,
-//             bankName: chequeDetails.bankName,
-//         });
+        // Save the Payment document
+        const savedPayment = await newPayment.save();
 
-//         // Save the ChequeDetails document
-//         const savedChequeDetails = await newChequeDetails.save();
-
-//         // Create a new Payment document with a reference to the saved ChequeDetails
-//         const newPayment = new Payment({
-//             totalCost: totalCost,
-//             customername: customerName,
-//             customerphoneno: customerPhone,
-//             amountpaid: amountpaid,
-//             remaining_amount: remaining_amount,
-//             payment_method: paymentMethod,
-//             chequeDetails: savedChequeDetails._id,
-//         });
-
-//         // Save the Payment document
-//         const savedPayment = await newPayment.save();
-
-//         res.status(200).json({ message: 'Payment details saved successfully', payment: savedPayment });
-//     } catch (error) {
-//         console.error('Error saving payment details:', error);
-//         res.status(500).json({ message: 'Internal server error' });
-//     }
-// });
+        res.status(200).json({ message: 'Payment details saved successfully', payment: savedPayment });
+    } catch (error) {
+        console.error('Error saving payment details:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
 
 module.exports = router;

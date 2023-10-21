@@ -29,6 +29,10 @@ function Payment() {
     upiID: '',
   });
 
+  const [cashDetails, setCashDetails] = useState({
+    cash_amount: '',
+  })
+
   const handleAmountPaidChange = (e) => {
     setAmountpaid(e.target.value);
   };
@@ -137,16 +141,16 @@ function Payment() {
       })
         .then((response) => {
           if (!response.ok) {
-            throw new Error('Error saving Cheque payment details');
+            throw new Error('Error saving UPI payment details');
           }
           return response.json();
         })
         .then((data) => {
-          console.log('Cheque payment details saved:', data);
+          console.log('UPI payment details saved:', data);
           // Handle success as needed (e.g., show a success message)
         })
         .catch((error) => {
-          console.error('Error saving Cheque payment details:', error);
+          console.error('Error saving UPI payment details:', error);
           // Handle errors as needed (e.g., show an error message)
         });
     }
@@ -158,13 +162,13 @@ function Payment() {
         amountpaid,
         remaining_amount,
         paymentMethod,
-        
+        cashDetails
       };
 
       console.log("frontend side")
       console.log(paymentData)
 
-      const url = "http://localhost:4000/payment/confirm_case_payment";
+      const url = "http://localhost:4000/payment/confirm_cash_payment";
       fetch(url, {
         method: 'POST',
         headers: {
@@ -179,11 +183,11 @@ function Payment() {
           return response.json();
         })
         .then((data) => {
-          console.log('Cheque payment details saved:', data);
+          console.log('Cash details saved:', data);
           // Handle success as needed (e.g., show a success message)
         })
         .catch((error) => {
-          console.error('Error saving Cheque payment details:', error);
+          console.error('Error saving Cash payment details:', error);
           // Handle errors as needed (e.g., show an error message)
         });
     }
@@ -325,7 +329,19 @@ function Payment() {
         </div>
       )}
 
-
+      {paymentMethod === 'Cash' && (
+        <div>
+          <div className="mb-4">
+            <label className="block mb-2">Cash Amount :</label>
+            <input
+              type="text"
+              value={cashDetails.cash_amount}
+              onChange={(e) => setCashDetails({ ...cashDetails, cash_amount: e.target.value })}
+              className="w-full p-2 border rounded"
+            />
+          </div>
+        </div>
+      )}
 
       <button
         onClick={handleConfirmPayment}

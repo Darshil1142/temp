@@ -25,6 +25,10 @@ const PaymentSchema = new Schema({
         type: String,
         require: true
     },
+    cashDetails:{
+      type: Schema.Types.ObjectId,
+      ref:'cashdetails',  
+    },
     chequeDetails: {
         type: Schema.Types.ObjectId,
         ref: 'ChequeDetails',
